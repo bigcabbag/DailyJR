@@ -1,0 +1,13 @@
+# 国内网络下载 crates.io 易超时，使用 rsproxy 镜像（仅对本 Rust 项目生效）
+[source.crates-io]
+replace-with = "rsproxy-sparse"
+
+[source.rsproxy-sparse]
+registry = "sparse+https://rsproxy.cn/index/"
+
+[registries.rsproxy]
+index = "sparse+https://rsproxy.cn/index/"
+
+[net]
+retry = 3
+git-fetch-with-cli = true

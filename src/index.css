@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #0f9d58;
+  --color-primary-hover: #0b8048;
+  --color-teal-accent: #14b8a6;
+  --color-bg-light: #f5f5f5;
+  --color-bg-dark: #121212;
+  --color-text-light: #333333;
+  --color-text-dark: #e0e0e0;
+  --color-danger: #d32f2f;
+  --color-success: #388e3c;
+  --font-heading: "Inter", system-ui, sans-serif;
+  --font-body: "Roboto", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text-light);
+  }
+
+  html.dark {
+    color: var(--color-text-dark);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+}
+
+.app-background {
+  background-color: var(--color-bg-light);
+  background-image:
+    linear-gradient(135deg, rgba(20, 184, 166, 0.08) 0%, transparent 50%),
+    linear-gradient(220deg, rgba(15, 157, 88, 0.06) 0%, transparent 45%),
+    url("https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80");
+  background-size: cover, cover, cover;
+  background-blend-mode: normal, normal, soft-light;
+  background-attachment: fixed;
+}
+
+html.dark .app-background {
+  background-color: var(--color-bg-dark);
+  background-image:
+    linear-gradient(135deg, rgba(20, 184, 166, 0.12) 0%, transparent 50%),
+    linear-gradient(220deg, rgba(15, 157, 88, 0.08) 0%, transparent 45%),
+    url("https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80");
+}
+
+.app-background::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 1rem;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+html.dark .glass-card {
+  background: rgba(30, 30, 30, 0.55);
+  border-color: rgba(20, 184, 166, 0.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.glass-card:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.58);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+html.dark .glass-card:hover {
+  background: rgba(40, 40, 40, 0.65);
+}
+
+.glass-header {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(20, 184, 166, 0.25);
+}
+
+html.dark .glass-header {
+  background: rgba(18, 18, 18, 0.75);
+  border-bottom-color: rgba(20, 184, 166, 0.15);
+}
+
+.ripple-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 10%, transparent 10%);
+  transform: scale(10);
+  opacity: 0;
+  transition: transform 0.45s ease, opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.ripple-btn:active::after {
+  transform: scale(0);
+  opacity: 1;
+  transition: 0s;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(15, 157, 88, 0.25);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
