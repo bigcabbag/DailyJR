@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { GlassCard } from '../components/GlassCard'
 import { ExpenseDonutChart } from '../components/ExpenseDonutChart'
+import { SectionHeader } from '../components/SectionHeader'
 import { TransactionList } from '../components/TransactionList'
 import { useFinance } from '../context/FinanceContext'
 import { formatMoney, groupExpensesByCategory, summarize } from '../lib/ledger'
@@ -19,7 +20,7 @@ export function Dashboard() {
     return (
       <div className="flex flex-col items-center justify-center gap-3 py-24">
         <div className="spinner" aria-hidden />
-        <p className="text-sm opacity-70">加载中…</p>
+        <p className="text-sm text-[var(--color-ink-muted)]">加载中…</p>
       </div>
     )
   }
@@ -27,48 +28,50 @@ export function Dashboard() {
   const { totalIncome, totalExpenses, netBalance } = stats
 
   return (
-    <div className="space-y-5">
-      <div className="grid gap-4 md:grid-cols-3">
-        <GlassCard>
-          <p className="text-xs font-medium tracking-wide opacity-60">
-            总收入
-          </p>
-          <p className="mt-2 font-heading text-2xl font-semibold text-success">
-            {formatMoney(totalIncome, settings.currency)}
-          </p>
-        </GlassCard>
-        <GlassCard>
-          <p className="text-xs font-medium tracking-wide opacity-60">
-            总支出
-          </p>
-          <p className="mt-2 font-heading text-2xl font-semibold text-danger">
-            {formatMoney(totalExpenses, settings.currency)}
-          </p>
-        </GlassCard>
-        <GlassCard>
-          <p className="text-xs font-medium tracking-wide opacity-60">
-            结余
-          </p>
+    <div className="space-y-8">
+      <SectionHeader
+        kicker="2026 · 北京实习专刊"
+        title="财务概览"
+        subtitle="从 6 月 4 日起，记录实习期间的每一笔收入与支出。"
+      />
+
+      <div className="grid gap-4 lg:grid-cols-12">
+        <GlassCard className="lg:col-span-5">
+          <p className="magazine-stat-label">结余 Balance</p>
           <p
-            className={`mt-2 font-heading text-2xl font-semibold ${
-              netBalance >= 0 ? 'text-primary' : 'text-danger'
+            className={`magazine-stat-value text-4xl md:text-5xl ${
+              netBalance >= 0 ? 'text-[var(--color-ink)]' : 'text-danger'
             }`}
           >
             {formatMoney(netBalance, settings.currency)}
           </p>
+          <p className="mt-3 text-sm text-[var(--color-ink-muted)]">
+            收入减去支出后的可用余额
+          </p>
         </GlassCard>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:col-span-7">
+          <GlassCard>
+            <p className="magazine-stat-label">总收入</p>
+            <p className="magazine-stat-value text-success">
+              {formatMoney(totalIncome, settings.currency)}
+            </p>
+          </GlassCard>
+          <GlassCard>
+            <p className="magazine-stat-label">总支出</p>
+            <p className="magazine-stat-value text-danger">
+              {formatMoney(totalExpenses, settings.currency)}
+            </p>
+          </GlassCard>
+        </div>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        <GlassCard>
-          <div className="mb-4 flex items-center justify-between gap-2">
-            <h2 className="font-heading text-lg font-semibold">最近流水</h2>
-            <Link
-              to="/transactions"
-              className="text-sm font-medium text-primary hover:underline"
-            >
-              管理全部
-              <i className="fa-solid fa-arrow-right ml-1 text-xs" />
+      <div className="grid gap-6 lg:grid-cols-12">
+        <GlassCard className="lg:col-span-7">
+          <div className="mb-5 flex items-end justify-between gap-2 border-b border-[var(--color-border)] pb-3 dark:border-[var(--color-border-dark)]">
+            <h3 className="magazine-card-title">最近流水</h3>
+            <Link to="/transactions" className="editorial-link">
+              管理全部 →
             </Link>
           </div>
           <TransactionList
@@ -78,10 +81,10 @@ export function Dashboard() {
           />
         </GlassCard>
 
-        <GlassCard>
-          <h2 className="font-heading mb-4 text-lg font-semibold">
-            支出分类占比
-          </h2>
+        <GlassCard className="lg:col-span-5">
+          <h3 className="magazine-card-title mb-5 border-b border-[var(--color-border)] pb-3 dark:border-[var(--color-border-dark)]">
+            支出分类
+          </h3>
           <ExpenseDonutChart data={pieData} darkMode={settings.darkMode} />
         </GlassCard>
       </div>

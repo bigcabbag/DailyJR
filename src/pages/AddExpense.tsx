@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { GlassCard } from '../components/GlassCard'
+import { SectionHeader } from '../components/SectionHeader'
 import { useFinance } from '../context/FinanceContext'
 import { validateRecord } from '../lib/ledger'
 import {
@@ -27,9 +28,6 @@ export function AddExpense() {
   const [note, setNote] = useState('')
   const [saving, setSaving] = useState(false)
 
-  const expenseCategories = EXPENSE_CATEGORIES
-  const incomeCategories = ['salary'] as const
-
   const handleTypeChange = (type: RecordType) => {
     setRecordType(type)
     setCategory(type === 'expense' ? 'taxi' : 'salary')
@@ -54,10 +52,7 @@ export function AddExpense() {
 
     setSaving(true)
     try {
-      await saveRecord({
-        ...record,
-        id: crypto.randomUUID(),
-      })
+      await saveRecord({ ...record, id: crypto.randomUUID() })
       toast.success('保存成功')
       setAmount('')
       setNote('')
@@ -69,96 +64,100 @@ export function AddExpense() {
     }
   }
 
-  const inputClass =
-    'w-full rounded-xl border border-teal-accent/30 bg-white/50 px-4 py-3 text-[var(--color-text-light)] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 dark:bg-white/10 dark:text-[var(--color-text-dark)]'
+  const incomeCategories = ['salary'] as const
 
   return (
-    <GlassCard className="mx-auto max-w-lg" hover={false}>
-      <h2 className="font-heading mb-6 text-xl font-semibold">记一笔</h2>
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="flex gap-2">
-          {(['expense', 'income'] as const).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => handleTypeChange(t)}
-              className={`ripple-btn min-h-12 flex-1 rounded-xl px-4 text-sm font-medium ${
-                recordType === t
-                  ? 'bg-primary text-white'
-                  : 'bg-white/40 dark:bg-white/10'
-              }`}
-            >
-              {RECORD_TYPE_LABEL[t]}
-            </button>
-          ))}
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-sm font-medium">类目</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value as Category)}
-            className={inputClass}
-          >
-            {(recordType === 'expense'
-              ? expenseCategories
-              : incomeCategories
-            ).map((cat) => (
-              <option key={cat} value={cat}>
-                {CATEGORY_META[cat].label}
-              </option>
+    <div className="mx-auto max-w-lg">
+      <SectionHeader
+        kicker="记账"
+        title="记一笔"
+        subtitle="记录一笔支出或实习工资收入。"
+      />
+      <GlassCard hover={false}>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="flex gap-2 border-b border-[var(--color-border)] pb-5 dark:border-[var(--color-border-dark)]">
+            {(['expense', 'income'] as const).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => handleTypeChange(t)}
+                className={`editorial-btn min-h-11 flex-1 border px-4 text-xs font-semibold uppercase tracking-wider ${
+                  recordType === t
+                    ? 'border-[var(--color-ink)] bg-[var(--color-ink)] text-white dark:border-[#fafafa] dark:bg-[#fafafa] dark:text-[var(--color-ink)]'
+                    : 'border-[var(--color-border)] bg-transparent text-[var(--color-ink-muted)] dark:border-[var(--color-border-dark)]'
+                }`}
+              >
+                {RECORD_TYPE_LABEL[t]}
+              </button>
             ))}
-          </select>
-        </div>
+          </div>
 
-        <div>
-          <label className="mb-1.5 block text-sm font-medium">日期</label>
-          <input
-            type="date"
-            value={date}
-            min={START_DATE}
-            onChange={(e) => setDate(e.target.value)}
-            className={inputClass}
-            required
-          />
-        </div>
+          <div>
+            <label className="magazine-stat-label mb-2 block">类目</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value as Category)}
+              className="editorial-input"
+            >
+              {(recordType === 'expense'
+                ? EXPENSE_CATEGORIES
+                : incomeCategories
+              ).map((cat) => (
+                <option key={cat} value={cat}>
+                  {CATEGORY_META[cat].label}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div>
-          <label className="mb-1.5 block text-sm font-medium">金额</label>
-          <input
-            type="number"
-            step="0.01"
-            min="0.01"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="0.00"
-            className={inputClass}
-            required
-          />
-        </div>
+          <div>
+            <label className="magazine-stat-label mb-2 block">日期</label>
+            <input
+              type="date"
+              value={date}
+              min={START_DATE}
+              onChange={(e) => setDate(e.target.value)}
+              className="editorial-input"
+              required
+            />
+          </div>
 
-        <div>
-          <label className="mb-1.5 block text-sm font-medium">
-            备注（选填）
-          </label>
-          <input
-            type="text"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="例如：午饭、滴滴打车"
-            className={inputClass}
-          />
-        </div>
+          <div>
+            <label className="magazine-stat-label mb-2 block">金额</label>
+            <input
+              type="number"
+              step="0.01"
+              min="0.01"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="0.00"
+              className="editorial-input font-semibold tabular-nums"
+              required
+            />
+          </div>
 
-        <button
-          type="submit"
-          disabled={saving}
-          className="ripple-btn min-h-12 w-full rounded-xl bg-primary font-medium text-white transition-colors hover:bg-primary-hover disabled:opacity-60"
-        >
-          {saving ? '保存中…' : '保存'}
-        </button>
-      </form>
-    </GlassCard>
+          <div>
+            <label className="magazine-stat-label mb-2 block">
+              备注（选填）
+            </label>
+            <input
+              type="text"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="例如：午饭、滴滴打车"
+              className="editorial-input"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={saving}
+            className="editorial-btn editorial-btn-accent min-h-12 w-full px-4 text-sm uppercase tracking-wider disabled:opacity-60"
+          >
+            {saving ? '保存中…' : '保存记录'}
+          </button>
+        </form>
+      </GlassCard>
+    </div>
   )
 }

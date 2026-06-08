@@ -13,7 +13,7 @@ export function GlassCard({
 }: GlassCardProps) {
   return (
     <div
-      className={`glass-card p-5 ${hover ? '' : 'hover:!transform-none hover:!shadow-[0_8px_32px_rgba(0,0,0,0.08)]'} ${className}`}
+      className={`editorial-card p-5 md:p-6 ${hover ? '' : 'no-hover'} ${className}`}
     >
       {children}
     </div>

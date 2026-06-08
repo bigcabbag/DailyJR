@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { GlassCard } from '../components/GlassCard'
+import { SectionHeader } from '../components/SectionHeader'
 import { TransactionList } from '../components/TransactionList'
 import { useFinance } from '../context/FinanceContext'
 import { filterByDateRange } from '../lib/ledger'
@@ -60,17 +61,15 @@ export function Transactions() {
 
   if (!settings) return null
 
-  const inputClass =
-    'rounded-xl border border-teal-accent/30 bg-white/50 px-3 py-2 text-sm dark:bg-white/10'
-
   return (
-    <div className="space-y-5">
-      <GlassCard hover={false}>
-        <h2 className="font-heading mb-1 text-xl font-semibold">流水管理</h2>
-        <p className="mb-4 text-sm opacity-70">
-          查看、筛选并删除记错的账目。概览页仅显示最近几条，完整记录请在此管理。
-        </p>
+    <div className="space-y-8">
+      <SectionHeader
+        kicker="账目管理"
+        title="流水"
+        subtitle="查看、筛选并删除记错的账目。"
+      />
 
+      <GlassCard hover={false}>
         <div className="space-y-4">
           <div className="flex flex-wrap gap-2">
             {(['all', 'expense', 'income'] as const).map((t) => (
@@ -81,10 +80,10 @@ export function Transactions() {
                   setTypeFilter(t)
                   setCategoryFilter('all')
                 }}
-                className={`ripple-btn min-h-12 rounded-xl px-4 text-sm font-medium ${
+                className={`editorial-btn min-h-10 border px-4 text-xs font-semibold uppercase tracking-wider ${
                   typeFilter === t
-                    ? 'bg-primary text-white'
-                    : 'bg-white/40 dark:bg-white/10'
+                    ? 'border-[var(--color-ink)] bg-[var(--color-ink)] text-white dark:border-[#fafafa] dark:bg-[#fafafa] dark:text-[var(--color-ink)]'
+                    : 'border-[var(--color-border)] text-[var(--color-ink-muted)] dark:border-[var(--color-border-dark)]'
                 }`}
               >
                 {t === 'all' ? '全部' : RECORD_TYPE_LABEL[t]}
@@ -94,13 +93,13 @@ export function Transactions() {
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <label className="mb-1 block text-xs opacity-70">类目</label>
+              <label className="magazine-stat-label mb-2 block">类目</label>
               <select
                 value={categoryFilter}
                 onChange={(e) =>
                   setCategoryFilter(e.target.value as Category | 'all')
                 }
-                className={`${inputClass} min-h-12 w-full`}
+                className="editorial-input"
               >
                 <option value="all">全部类目</option>
                 {categoryOptions.map((cat) => (
@@ -111,34 +110,34 @@ export function Transactions() {
               </select>
             </div>
             <div>
-              <label className="mb-1 block text-xs opacity-70">开始日期</label>
+              <label className="magazine-stat-label mb-2 block">开始</label>
               <input
                 type="date"
                 value={from}
                 min={START_DATE}
                 max={to}
                 onChange={(e) => setFrom(e.target.value)}
-                className={`${inputClass} min-h-12 w-full`}
+                className="editorial-input"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs opacity-70">结束日期</label>
+              <label className="magazine-stat-label mb-2 block">结束</label>
               <input
                 type="date"
                 value={to}
                 min={from}
                 onChange={(e) => setTo(e.target.value)}
-                className={`${inputClass} min-h-12 w-full`}
+                className="editorial-input"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs opacity-70">搜索</label>
+              <label className="magazine-stat-label mb-2 block">搜索</label>
               <input
                 type="search"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 placeholder="备注、类目、日期"
-                className={`${inputClass} min-h-12 w-full`}
+                className="editorial-input"
               />
             </div>
           </div>
@@ -146,11 +145,9 @@ export function Transactions() {
       </GlassCard>
 
       <GlassCard hover={false}>
-        <div className="mb-4 flex items-center justify-between gap-2">
-          <h3 className="font-heading text-lg font-semibold">
-            共 {filtered.length} 笔
-          </h3>
-        </div>
+        <p className="magazine-stat-label mb-4">
+          共 {filtered.length} 笔记录
+        </p>
         <TransactionList
           records={filtered}
           settings={settings}

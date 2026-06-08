@@ -111,5 +111,5 @@ export function applySettingsToDocument(settings: AppSettings) {
   document.documentElement.classList.toggle('dark', settings.darkMode)
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute('content', settings.darkMode ? '#121212' : '#f5f5f5')
+    ?.setAttribute('content', settings.darkMode ? '#09090b' : '#fafafa')
 }

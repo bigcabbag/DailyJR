@@ -13,14 +13,14 @@ interface ExpenseDonutChartProps {
 export function ExpenseDonutChart({ data, darkMode }: ExpenseDonutChartProps) {
   if (data.length === 0) {
     return (
-      <p className="flex h-48 items-center justify-center text-sm opacity-60">
+      <p className="flex h-48 items-center justify-center text-sm text-[var(--color-ink-muted)]">
         暂无支出数据，无法生成图表。
       </p>
     )
   }
 
   const labels = data.map((d) => CATEGORY_META[d.category].label)
-  const textColor = darkMode ? '#e0e0e0' : '#333333'
+  const textColor = darkMode ? '#e4e4e7' : '#3f3f46'
 
   return (
     <div className="h-56">
@@ -31,11 +31,11 @@ export function ExpenseDonutChart({ data, darkMode }: ExpenseDonutChartProps) {
             {
               data: data.map((d) => d.total),
               backgroundColor: [
-                'rgba(15, 157, 88, 0.65)',
-                'rgba(20, 184, 166, 0.55)',
-                'rgba(56, 142, 60, 0.5)',
+                'rgba(236, 72, 153, 0.85)',
+                'rgba(24, 24, 27, 0.75)',
+                'rgba(161, 161, 170, 0.65)',
               ],
-              borderColor: 'rgba(255, 255, 255, 0.4)',
+              borderColor: darkMode ? '#18181b' : '#ffffff',
               borderWidth: 2,
             },
           ],
@@ -46,7 +46,11 @@ export function ExpenseDonutChart({ data, darkMode }: ExpenseDonutChartProps) {
           plugins: {
             legend: {
               position: 'bottom',
-              labels: { color: textColor, boxWidth: 12 },
+              labels: {
+                color: textColor,
+                boxWidth: 10,
+                font: { family: 'Public Sans', size: 11 },
+              },
             },
           },
         }}
