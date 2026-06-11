@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { GlassCard } from '../components/GlassCard'
 import { SectionHeader } from '../components/SectionHeader'
-import { useFinance } from '../context/FinanceContext'
+import { useFinance } from '../context/useFinance'
 import { validateRecord } from '../lib/ledger'
 import {
   CATEGORY_META,

@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import { GlassCard } from '../components/GlassCard'
 import { SectionHeader } from '../components/SectionHeader'
 import { TransactionList } from '../components/TransactionList'
-import { useFinance } from '../context/FinanceContext'
+import { useFinance } from '../context/useFinance'
 import { filterByDateRange } from '../lib/ledger'
 import {
   CATEGORY_META,
@@ -20,7 +20,7 @@ type TypeFilter = 'all' | RecordType
 
 export function Transactions() {
   const { snapshot, removeRecord } = useFinance()
-  const records = snapshot?.records ?? []
+  const records = snapshot?.records
   const settings = snapshot?.settings
 
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all')
@@ -30,7 +30,7 @@ export function Transactions() {
   const [keyword, setKeyword] = useState('')
 
   const filtered = useMemo(() => {
-    let list = filterByDateRange(records, from, to)
+    let list = filterByDateRange(records ?? [], from, to)
     if (typeFilter !== 'all') {
       list = list.filter((r) => r.type === typeFilter)
     }

@@ -25,3 +25,10 @@ dist-ssr
 
 # Tauri
 src-tauri/target
+.codegraph/daemon.pid
+
+# Vercel
+.vercel
+
+
+.vercel

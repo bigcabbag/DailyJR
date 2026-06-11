@@ -80,21 +80,26 @@ export async function replaceSnapshot(
   if (snapshot.version !== 1) {
     throw new Error('不支持的备份版本')
   }
-  await saveSnapshot(snapshot)
-  return snapshot
+  const normalized = normalizeSnapshot(snapshot)
+  await saveSnapshot(normalized)
+  return normalized
 }
 
-export function parseImportJson(text: string): AppSnapshot {
-  const data = JSON.parse(text) as AppSnapshot
+export function normalizeSnapshot(data: AppSnapshot): AppSnapshot {
   if (!data.records || !Array.isArray(data.records)) {
     throw new Error('备份文件无效：缺少 records 数组')
   }
   if (!data.settings) {
     data.settings = { ...DEFAULT_SETTINGS }
   }
+  data.settings = { ...DEFAULT_SETTINGS, ...data.settings }
   data.version = 1
   data.startDate = START_DATE
   return data
+}
+
+export function parseImportJson(text: string): AppSnapshot {
+  return normalizeSnapshot(JSON.parse(text) as AppSnapshot)
 }
 
 export function downloadJson(snapshot: AppSnapshot, filename?: string) {

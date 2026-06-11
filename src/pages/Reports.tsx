@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { GlassCard } from '../components/GlassCard'
 import { MonthlyLineChart } from '../components/MonthlyLineChart'
 import { SectionHeader } from '../components/SectionHeader'
-import { useFinance } from '../context/FinanceContext'
+import { useFinance } from '../context/useFinance'
 import {
   categoryTableRows,
   filterByDateRange,
@@ -15,14 +15,14 @@ const today = () => new Date().toISOString().slice(0, 10)
 
 export function Reports() {
   const { snapshot } = useFinance()
-  const records = snapshot?.records ?? []
+  const records = snapshot?.records
   const settings = snapshot?.settings
 
   const [from, setFrom] = useState(START_DATE)
   const [to, setTo] = useState(today())
 
   const filtered = useMemo(
-    () => filterByDateRange(records, from, to),
+    () => filterByDateRange(records ?? [], from, to),
     [records, from, to],
   )
 

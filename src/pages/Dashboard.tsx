@@ -4,17 +4,20 @@ import { GlassCard } from '../components/GlassCard'
 import { ExpenseDonutChart } from '../components/ExpenseDonutChart'
 import { SectionHeader } from '../components/SectionHeader'
 import { TransactionList } from '../components/TransactionList'
-import { useFinance } from '../context/FinanceContext'
+import { useFinance } from '../context/useFinance'
 import { formatMoney, groupExpensesByCategory, summarize } from '../lib/ledger'
 
 export function Dashboard() {
   const { loading, snapshot } = useFinance()
 
-  const records = snapshot?.records ?? []
+  const records = snapshot?.records
   const settings = snapshot?.settings
 
-  const stats = useMemo(() => summarize(records), [records])
-  const pieData = useMemo(() => groupExpensesByCategory(records), [records])
+  const stats = useMemo(() => summarize(records ?? []), [records])
+  const pieData = useMemo(
+    () => groupExpensesByCategory(records ?? []),
+    [records],
+  )
 
   if (loading || !settings) {
     return (
@@ -75,7 +78,7 @@ export function Dashboard() {
             </Link>
           </div>
           <TransactionList
-            records={records}
+            records={records ?? []}
             settings={settings}
             limit={8}
           />

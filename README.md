@@ -1,6 +1,6 @@
 # 北京实习流水
 
-从北京实习第一天（**2026-06-04**）起记录打车、日用品、吃饭等支出，以及实习工资收入。玻璃态界面，数据保存在本机 **IndexedDB**（浏览器或 Tauri 桌面壳内）。
+从北京实习第一天（**2026-06-04**）起记录打车、日用品、吃饭等支出，以及实习工资收入。玻璃态界面，默认数据保存在本机 **IndexedDB**（浏览器或 Tauri 桌面壳内），配置 Supabase 后可用邮箱账号在手机和电脑之间同步。
 
 ## 类目
 
@@ -65,8 +65,34 @@ npm run preview
 
 - IndexedDB 库名：`intern-finance-db`
 - **设置 → 导出/导入 JSON** 可备份
-- 云端同步为占位功能
+- 云端同步使用 Supabase Auth + `user_snapshots` 表
+
+## Supabase 同步
+
+1. 在 Supabase 创建项目，并在 Authentication 中启用 Email 登录。
+2. 打开 Supabase SQL Editor，执行项目根目录的 `supabase-schema.sql`。
+3. 复制 `.env.example` 为 `.env.local`，填入项目的 URL 和 anon public key：
+
+```bash
+VITE_SUPABASE_URL=https://your-project-ref.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-public-key
+```
+
+4. 重启开发服务：`npm run dev`。
+5. 打开“设置 → 云端同步”，注册或登录邮箱账号。
+
+同步规则：
+
+- 未配置 Supabase 或未登录时，继续使用本机 IndexedDB。
+- 登录后若云端已有数据，以云端数据为准并写回本机缓存。
+- 登录后若云端还没有数据，会把当前本机数据上传为初始云端数据。
+- 新增、删除、导入和设置变更会先保存到本机，再尝试同步到云端。
+
+手机访问：
+
+- 正式使用建议部署到 Vercel / Netlify / Supabase 静态托管，手机和电脑打开同一个网址登录同一账号。
+- 本地开发时，手机需要和电脑在同一 Wi-Fi，并让 Vite 监听局域网地址后访问电脑 IP。
 
 ## 技术栈
 
-Vite · React · TypeScript · Tailwind · Chart.js · Tauri 2 · IndexedDB
+Vite · React · TypeScript · Tailwind · Chart.js · Tauri 2 · IndexedDB · Supabase
