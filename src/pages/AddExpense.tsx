@@ -144,7 +144,7 @@ export function AddExpense() {
               type="text"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="例如：午饭、滴滴打车"
+              placeholder="例如：想想今天干了什么"
               className="editorial-input"
             />
           </div>
