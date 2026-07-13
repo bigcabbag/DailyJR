@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { GlassCard } from '../components/GlassCard'
 import { SectionHeader } from '../components/SectionHeader'
 import { TransactionList } from '../components/TransactionList'
@@ -28,6 +29,7 @@ export function Transactions() {
   const [from, setFrom] = useState(START_DATE)
   const [to, setTo] = useState(today())
   const [keyword, setKeyword] = useState('')
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
     let list = filterByDateRange(records ?? [], from, to)
@@ -54,8 +56,14 @@ export function Transactions() {
     return [...EXPENSE_CATEGORIES, 'salary'] as const
   }, [typeFilter])
 
-  const handleDelete = (id: string) => {
-    if (!window.confirm('确定删除这笔记录？删除后无法恢复。')) return
+  const handleDeleteRequest = (id: string) => {
+    setPendingDeleteId(id)
+  }
+
+  const handleDeleteConfirm = () => {
+    if (!pendingDeleteId) return
+    const id = pendingDeleteId
+    setPendingDeleteId(null)
     void removeRecord(id).then(() => toast.success('已删除'))
   }
 
@@ -151,9 +159,20 @@ export function Transactions() {
         <TransactionList
           records={filtered}
           settings={settings}
-          onDelete={handleDelete}
+          onDelete={handleDeleteRequest}
         />
       </GlassCard>
+
+      <ConfirmDialog
+        open={pendingDeleteId !== null}
+        title="确认删除"
+        message="确定删除这笔记录？删除后无法恢复。"
+        confirmLabel="删除"
+        cancelLabel="取消"
+        danger
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setPendingDeleteId(null)}
+      />
     </div>
   )
 }
