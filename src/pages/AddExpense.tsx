@@ -8,6 +8,7 @@ import { validateRecord } from '../lib/ledger'
 import {
   CATEGORY_META,
   EXPENSE_CATEGORIES,
+  INCOME_CATEGORIES,
   RECORD_TYPE_LABEL,
   START_DATE,
   type Category,
@@ -36,12 +37,17 @@ export function AddExpense() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const parsed = parseFloat(amount)
+    const trimmedNote = note.trim()
     const record: Omit<TransactionRecord, 'id'> = {
       date,
       type: recordType,
       category,
       amount: parsed,
-      note: note.trim() || undefined,
+      note:
+        trimmedNote ||
+        (parsed === 0 && recordType === 'expense' && category === 'taxi'
+          ? '月卡骑行'
+          : undefined),
     }
 
     const err = validateRecord(record)
@@ -64,7 +70,7 @@ export function AddExpense() {
     }
   }
 
-  const incomeCategories = ['salary'] as const
+  const incomeCategories = INCOME_CATEGORIES
 
   return (
     <div className="mx-auto max-w-lg">
@@ -127,10 +133,10 @@ export function AddExpense() {
             <input
               type="number"
               step="0.01"
-              min="0.01"
+              min="0"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
+              placeholder="0 表示月卡/已预付"
               className="editorial-input font-semibold tabular-nums"
               required
             />

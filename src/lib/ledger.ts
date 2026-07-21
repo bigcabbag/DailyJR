@@ -29,8 +29,8 @@ export function validateRecord(
   if (!isOnOrAfterStartDate(partial.date)) {
     return `日期不能早于 ${START_DATE}`
   }
-  if (partial.amount <= 0 || !Number.isFinite(partial.amount)) {
-    return '金额必须大于 0'
+  if (partial.amount < 0 || !Number.isFinite(partial.amount)) {
+    return '金额不能为负数'
   }
   const meta = CATEGORY_META[partial.category]
   if (meta.type !== partial.type) {

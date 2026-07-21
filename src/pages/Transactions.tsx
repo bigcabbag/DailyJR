@@ -9,6 +9,7 @@ import { filterByDateRange } from '../lib/ledger'
 import {
   CATEGORY_META,
   EXPENSE_CATEGORIES,
+  INCOME_CATEGORIES,
   RECORD_TYPE_LABEL,
   START_DATE,
   type Category,
@@ -51,9 +52,9 @@ export function Transactions() {
   }, [records, from, to, typeFilter, categoryFilter, keyword])
 
   const categoryOptions = useMemo(() => {
-    if (typeFilter === 'income') return ['salary'] as const
+    if (typeFilter === 'income') return INCOME_CATEGORIES
     if (typeFilter === 'expense') return EXPENSE_CATEGORIES
-    return [...EXPENSE_CATEGORIES, 'salary'] as const
+    return [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES] as const
   }, [typeFilter])
 
   const handleDeleteRequest = (id: string) => {

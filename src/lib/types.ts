@@ -1,7 +1,7 @@
 export const START_DATE = '2026-06-04'
 
 export type ExpenseCategory = 'taxi' | 'necessities' | 'meals'
-export type IncomeCategory = 'salary'
+export type IncomeCategory = 'salary' | 'others_transfer'
 export type Category = ExpenseCategory | IncomeCategory
 
 export type RecordType = 'expense' | 'income'
@@ -46,6 +46,7 @@ export const CATEGORY_META: Record<
   necessities: { label: '日用品', type: 'expense', icon: 'fa-basket-shopping' },
   meals: { label: '吃饭', type: 'expense', icon: 'fa-utensils' },
   salary: { label: '实习工资', type: 'income', icon: 'fa-wallet' },
+  others_transfer: { label: '他人转账', type: 'income', icon: 'fa-hand-holding-dollar' },
 }
 
 export const RECORD_TYPE_LABEL: Record<RecordType, string> = {
@@ -58,6 +59,8 @@ export const EXPENSE_CATEGORIES: ExpenseCategory[] = [
   'necessities',
   'meals',
 ]
+
+export const INCOME_CATEGORIES: IncomeCategory[] = ['salary', 'others_transfer']
 
 export const CURRENCY_SYMBOL: Record<CurrencyCode, string> = {
   CNY: '¥',
